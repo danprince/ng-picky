@@ -1,3 +1,19 @@
+/* Picker CSS */
+
+/* Table of Contents
+ * -----------------
+ * #1 - Main Element Styles
+ * #2 - Generic Canvas Styles
+ * #3 - Generic Input Styles
+ * #4 - Generic Cursor Styles
+ * #5 - Component Styles
+ * #6 - Hue Space Components
+ * #7 - Main Square Canvas
+ * #8 - Misc Components
+ */
+
+/* #1 - Main Element Styles */
+/* ------------------------ */
 .picker {
   font-size:1.5em;
   padding:0.5em;
@@ -6,17 +22,82 @@
   box-shadow:0 3px 5px huea(0, 0, 0, 0.1);
 }
 
+/* #2 - Generic Canvas Styles */
+/* -------------------------- */
 .picker canvas {
   cursor:crosshair;
   width:100%;
   height:100%;
 }
 
-.picker-wrapper {
-  position:relative;
-  padding-right:2em;
+/* #3 - Generic Input Styles */
+/* ------------------------- */
+.picker input[type=text] {
+  background:#222;
+  color:#aaa;
+  border:none;
+  width:100%;
+  padding:0.5em;
+  text-transform:uppercase;
+
+  border-radius:0.2em;
+  -webkit-border-radius:0.2em;
+  -moz-border-radius:0.2em;
+
+  box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
 }
 
+/* #4 - Generic Cursor Styles */
+/* -------------------------- */
+.picker-cursor {
+  font-style:normal;
+  text-rendering:auto;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  pointer-events:none;
+}
+
+/* #5 - Component Styles */
+/* --------------------- */
+
+  /* #5.1 - Colorspace Wrapper */
+  .picker-wrapper {
+    position:relative;
+    /* Make space for right hand side element */
+    padding-right:2em;
+  }
+
+  /* #5.2 - Simple Row Class
+   * Provides row-like functionality for
+   * input elements in the form */
+  .picker-row {
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* #5.3 - Three Columns
+   * One third width columns for
+   * input elements in the form
+   */
+  .picker-three {
+    position:relative;
+    float:left;
+    width:33.33% !important;
+    padding-right:0.25em;
+
+    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+  }
+
+
+/* ------------------------- */
+/* #6 - Hue Space Components */
+/* ------------------------- */
+
+/* #6.1 Sidebar */
 .picker-huespace {
   position:absolute;
   right:0;
@@ -25,11 +106,13 @@
   height:100%;
 }
 
+/* #6.2 Huespace Canvas */
 .picker-huespace canvas {
   cursor:crosshair;
   background:white;
 }
 
+/* #6.3 Cursor next to sidebar */
 .picker-huespace .picker-cursor {
   position:absolute;
   top:0;
@@ -42,19 +125,17 @@
   margin-top:-0.65em;
 }
 
+/* ----------------------- */
+/* #7 - Main Square Canvas */
+/* ----------------------- */
+
+/* #7.1 Square container */
 .picker-colorspace {
   width:8.5em;
   height:8.5em;
 }
 
-.picker-cursor {
-  font-style:normal;
-  text-rendering:auto;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  pointer-events:none;
-}
-
+/* #7.2 Cursor above main square */
 .picker-colorspace .picker-cursor {
   position:absolute;
   top:0;
@@ -68,27 +149,15 @@
   margin-top:-0.05em;
 }
 
+/* #7.3 Cursor */
 .picker-colorspace canvas {
   background:white;
 }
 
-.picker-input {
-  margin-top:0.5em;
-}
+/* #8 - Misc Components */
+/* -------------------- */
 
-.picker-row {
-  position:relative;
-  overflow:hidden;
-}
-
-.picker-three {
-  position:relative;
-  float:left;
-  width:33.33% !important;
-  padding-right:0.25em;
-  box-sizing:border-box;
-}
-
+/* #8.1 Generic styles for (pre|suf)fixes. */
 .picker-prefix, .picker-suffix {
   position:absolute;
   top:0;
@@ -96,22 +165,30 @@
   line-height:1.25em;
 }
 
-.picker-prefix + input[type=text] {
-  padding-left:1.5em !important;
-}
-.picker-suffix + input[type=text] {
-  padding-right:1.5em !important;
-}
-
+/* #8.2 Position prefix */
 .picker-prefix {
   left:0.25em;
 }
+/* #8.3  Position suffix */
 .picker-suffix {
   right:0.25em;
 }
 
+/* Ensure that inputs within columns
+ * don't expand to 100% width and
+ * clobber the padding */
 .picker-three input[type=text] {
   width:auto;
+}
+
+/* Make room for prefixes */
+.picker-prefix + input[type=text] {
+  padding-left:1.5em !important;
+}
+
+/* Make room for suffixes */
+.picker-suffix + input[type=text] {
+  padding-right:1.5em !important;
 }
 
 /* Placeholder styles for all browsers */
@@ -126,16 +203,4 @@
 }
 .picker-input input[type=text]::-ms-input-placeholder {
   color:#555;
-}
-
-/* Input Styles */
-.picker input[type=text] {
-  background:#222;
-  color:#aaa;
-  border:none;
-  width:100%;
-  padding:0.5em;
-  box-sizing:border-box;
-  border-radius:0.2em;
-  text-transform:uppercase;
 }
