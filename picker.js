@@ -7,12 +7,12 @@ angular.module('picker', [])
  * @description
  * Need to figure out description a bit first
  */
-.directive('picker', function() {
+.directive('picker', function(Color) {
   return {
     restrict: 'EA',
     controller: function($scope) {
       $scope.hue = 0;
-      $scope.color = null;
+      $scope.color = Color.create(255, 255, 255);
 
       $scope.pick = function(color) {
         $scope.color = color;
@@ -266,16 +266,28 @@ angular.module('picker', [])
       color: '='
     },
     link: function(scope) {
+      console.log('color', scope.color);
     },
     template:
     "<section class='picker-input'> \
       <div class='picker-row'> \
         <span class='picker-prefix'>#</span> \
         <input type='text' placeholder='FFFFFF' \
-               ng-blur='' \
-               ng-model='color.toUnprefixedHex()'/> \
+               ng-bind='color | toUnprefixedHex'/> \
       </div> \
     </section>"
+  };
+})
+
+.filter('toHex', function() {
+  return function(color) {
+    return color.toHex();
+  };
+})
+
+.filter('toUnprefixedHex', function() {
+  return function(color) {
+    return color.toUnprefixedHex();
   };
 })
 
