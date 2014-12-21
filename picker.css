@@ -3,7 +3,7 @@
   padding:0.5em;
   width:10em;
   background:#333;
-  box-shadow:0 3px 5px rgba(0, 0, 0, 0.1);
+  box-shadow:0 3px 5px huea(0, 0, 0, 0.1);
 }
 
 .picker canvas {
@@ -17,7 +17,7 @@
   padding-right:2em;
 }
 
-.picker-rgbspace {
+.picker-huespace {
   position:absolute;
   right:0;
   top:0;
@@ -25,12 +25,12 @@
   height:100%;
 }
 
-.picker-rgbspace canvas {
+.picker-huespace canvas {
   cursor:crosshair;
-  background:blue;
+  background:white;
 }
 
-.picker-rgbspace .picker-cursor {
+.picker-huespace .picker-cursor {
   position:absolute;
   top:0;
   left:0;
@@ -60,7 +60,7 @@
   top:0;
   left:0;
   color:#f3f3f3;
-  font-size:2em;
+  font-size:1.5em;
 
   /* tweak cursor into place */
   line-height:0;
@@ -69,7 +69,7 @@
 }
 
 .picker-colorspace canvas {
-  background:red;
+  background:white;
 }
 
 .picker-input {
@@ -137,5 +137,5 @@
   padding:0.5em;
   box-sizing:border-box;
   border-radius:0.2em;
-  margin-bottom:0.3em;
+  text-transform:uppercase;
 }

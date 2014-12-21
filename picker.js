@@ -2,22 +2,36 @@ angular.module('picker', [])
 
 // Color Picker Directive
 .directive('picker', function() {
+  return {
+    restrict: 'EA',
+    controller: function($scope) {
+      $scope.hue = 0;
+      $scope.color = null;
 
+      $scope.pick = function(color) {
+        $scope.color = color;
+        $scope.$apply();
+      };
+    },
+    template:
+    "<div class='picker'> \
+      <div class='picker-wrapper'> \
+        <color-space hue='hue' select='pick($color)'></color-space> \
+        <hue-space hue='hue'></hue-space> \
+      </div> \
+      <converters color='color'></converters> \
+    </div>"
+  };
 })
-
-
-// Picker for selecting a hue
-.directive('hueSpace', function() {
-
-})
-
 
 // Service for Creating Reusable Widgets
 .service('Widgets', function() {
 
-  this.cursor = function() {
+  this.cursor = function(character) {
     var cursor = document.createElement('div');
-    cursor.setAttribute('class', 'cursor');
+    cursor.innerHTML = character;
+    cursor.setAttribute('class', 'picker-cursor');
+
     cursor.style.position = 'absolute';
     cursor.style.top = 0;
     cursor.style.left = 0;
@@ -42,43 +56,44 @@ angular.module('picker', [])
 })
 
 
-.directive('colorSpace', function(Widgets, ConvertColor) {
+.directive('colorSpace', function(Widgets, Color, ConvertColor, PickerUtils) {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       hue: '=',
       select: '&'
     },
+    template: "<section class='picker-colorspace'></section>",
     controller: function($scope) {
       $scope.$watch('hue', function() {
-        // redraw colour space
+        $scope.draw();
       });
     },
     link: function(scope, element) {
       var space = Widgets.canvas(),
           canvas = space.canvas,
           context = space.context,
-          cursor = Widgets.cursor();
+          cursor = Widgets.cursor('&#9675;');
+
+      scope.$watch('hue', function() {
+        scope.draw();
+      });
 
       // Pick the color at the cursor
-      // (relies on cursor staae
+      // (relies on cursor state
       // rather than arguments)
       scope.pick = function() {
         var x, y, data, rgb, hex;
 
         // get cursor's position
-        x = cursor.element.style.left;
-        y = cursor.element.style.right;
-        data = context.getImageData(x, y, 1, 1);
-
-        // convert to rgb
-        hex = ConvertColor
-          .fromRGB(data[0], data[1], data[2])
-          .toHex();
+        x = PickerUtils.stripPx(cursor.element.style.left);
+        y = PickerUtils.stripPx(cursor.element.style.top);
+        data = context.getImageData(x, y, 1, 1).data;
 
         // expose $color for select expression
         scope.select({
-          $color: hex
+          $color: Color.create(data[0], data[1], data[2])
         });
       };
 
@@ -87,19 +102,19 @@ angular.module('picker', [])
       // to the parent element.
       scope.moveCursor = function(event) {
         var bounds = this.getBoundingClientRect(),
-            x = e.pageX - bounds.left,
-            y = e.pageY - bounds.top;
+            x = event.pageX - bounds.left,
+            y = event.pageY - bounds.top;
 
         // update cursor's position
-        cursor.element.style.left = e.pageX;
-        cursor.element.style.top  = e.pageY;
+        cursor.element.style.left = x + 'px';
+        cursor.element.style.top  = y + 'px';
 
         // pick the color at this position
         scope.pick();
       };
 
       // if mousedown move cursor
-      scope.mouseMove = function(mousedown, event) {
+      scope.mouseMove = function(event) {
         if(scope.mousedown) {
           scope.moveCursor.call(this, event);
         }
@@ -125,14 +140,14 @@ angular.module('picker', [])
         l = 0;
 
         for(y = 0; y < canvas.height; y++) {
-          l = 100 - ((y / height) * 100);
+          l = 100 - ((y / canvas.height) * 100);
 
-          gradient = ctx.createLinearGradient(0, 0, width, 0);
+          gradient = context.createLinearGradient(0, 0, canvas.width, 0);
           gradient.addColorStop(0, 'hsl(' + h + ', 0%, ' + l + '%)');
           gradient.addColorStop(1, 'hsl(' + h + ', 100%, ' + l + '%)');
 
           context.fillStyle = gradient;
-          context.fillRect(0, y, canvas.width, 0);
+          context.fillRect(0, y, canvas.width, 1);
         }
 
       };
@@ -147,11 +162,120 @@ angular.module('picker', [])
       canvas.addEventListener('mouseup',   scope.mouseToggle.bind(null, false));
       canvas.addEventListener('mousedown', scope.mouseToggle.bind(null, true));
       canvas.addEventListener('mousemove', scope.mouseMove);
-      canvas.addEventListener('click',     scope.updateCursor);
+      canvas.addEventListener('click',     scope.moveCursor);
     }
   };
 })
 
+.directive('hueSpace', function(Widgets, PickerUtils) {
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: {
+      hue: '='
+    },
+    template: "<aside class='picker-huespace'></aside>",
+    controller: function($scope) {
+      $scope.$watch('hue', function() {
+        // redraw colour space
+      });
+    },
+    link: function(scope, element) {
+      var space = Widgets.canvas(),
+          canvas = space.canvas,
+          context = space.context,
+          cursor = Widgets.cursor('&#9654;');
+
+      // Pick the color at the cursor
+      // (relies on cursor staae
+      // rather than arguments)
+      scope.pick = function() {
+        // get cursor's position
+        var y = PickerUtils.stripPx(cursor.element.style.top);
+        scope.hue = Math.round((y / canvas.height) * 360);
+      };
+
+      // move a cursor based on a mouse event
+      // expects to be called with `this` set
+      // to the parent element.
+      scope.moveCursor = function(event) {
+        var bounds = this.getBoundingClientRect(),
+            y = event.pageY - bounds.top;
+
+        // update cursor's position
+        cursor.element.style.top = y + 'px';
+
+        // pick the color at this position
+        scope.pick();
+        scope.$apply();
+      };
+
+      // if mousedown move cursor
+      scope.mouseMove = function(event) {
+        if(scope.mousedown) {
+          scope.moveCursor.call(this, event);
+        }
+      };
+
+      // toggle mouse state
+      scope.mouseToggle = function(mousedown) {
+        scope.mousedown = mousedown;
+      };
+
+      // resize canavas
+      scope.resize = function() {
+        canvas.width = element.prop('offsetWidth');
+        canvas.height = element.prop('offsetHeight');
+      };
+
+      // redraw space
+      scope.draw = function() {
+        var h = 0;
+
+        for(y = 0; y < canvas.height; y++) {
+          // calculate lightness
+          h = ((y / canvas.height) * 360);
+          context.fillStyle = 'hsl(' + h + ', 100%, 50%)';
+          context.fillRect(0, y, canvas.width, 1);
+        }
+      };
+
+      scope.resize();
+      scope.mousedown = false;
+      scope.draw();
+
+      element.append(canvas);
+      element.append(cursor.element);
+
+      canvas.addEventListener('mouseup',   scope.mouseToggle.bind(null, false));
+      canvas.addEventListener('mousedown', scope.mouseToggle.bind(null, true));
+      canvas.addEventListener('mousemove', scope.mouseMove);
+      canvas.addEventListener('click',     scope.moveCursor);
+    }
+  };
+})
+
+
+.directive('converters', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      color: '='
+    },
+    link: function(scope) {
+      scope.$watch('color', function() {
+        console.log(scope.color.toHex());
+      });
+    },
+    template:
+    "<section class='picker-input'> \
+      <div class='picker-row'> \
+        <span class='picker-prefix'>#</span> \
+        <input type='text' placeholder='FFFFFF' ng-model='color.toUnprefixedHex()'/> \
+      </div> \
+    </section>"
+  };
+})
 
 .service('Color', function(Hex) {
 
@@ -169,8 +293,13 @@ angular.module('picker', [])
 
   // Converts a color to a Hex string
   Color.prototype.toHex = function() {
-    return ['#']
-      .concat(this.toRGB().map(this.decToHex))
+    return '#' + this.toUnprefixedHex();
+  };
+
+  // Converts to hex string without #
+  Color.prototype.toUnprefixedHex = function() {
+    return this.toRGB()
+      .map(this.decToHex)
       .join('');
   };
 
@@ -226,7 +355,7 @@ angular.module('picker', [])
 })
 
 
-.factory('ConvertColor', function(Color, Hex) {
+.service('ConvertColor', function(Color, Hex) {
 
   // Create a color from primitive rgb values
   // expected within the range [0, 255]
@@ -316,6 +445,12 @@ angular.module('picker', [])
     function duplicate(a) {
       return  [a, a];
     }
+  };
+})
+
+.service('PickerUtils', function() {
+  this.stripPx = function(str) {
+    return str.slice(0, str.length - 2);
   };
 });
 
