@@ -1,6 +1,12 @@
 angular.module('picker', [])
 
-// Color Picker Directive
+/**
+ * @ngdoc directive
+ * @name picker
+ *
+ * @description
+ * Need to figure out description a bit first
+ */
 .directive('picker', function() {
   return {
     restrict: 'EA',
@@ -24,38 +30,16 @@ angular.module('picker', [])
   };
 })
 
-// Service for Creating Reusable Widgets
-.service('Widgets', function() {
-
-  this.cursor = function(character) {
-    var cursor = document.createElement('div');
-    cursor.innerHTML = character;
-    cursor.setAttribute('class', 'picker-cursor');
-
-    cursor.style.position = 'absolute';
-    cursor.style.top = 0;
-    cursor.style.left = 0;
-
-    return {
-      element: cursor,
-      x: 0,
-      y: 0
-    };
-  };
-
-  this.canvas = function() {
-    var canvas = document.createElement('canvas'),
-        context = canvas.getContext('2d');
-
-    return {
-      canvas: canvas,
-      context: context
-    };
-  };
-
-})
-
-
+/**
+ * @ngdoc directive
+ * @name colorSpace
+ *
+ * @description
+ * Allows the user to select a color from the main colorspace.
+ * Requires a hue value in order to generate the colorspace,
+ * then listens for mouse events in order to move the cursor
+ * around the space.
+ */
 .directive('colorSpace', function(Widgets, Color, ConvertColor, PickerUtils) {
   return {
     restrict: 'E',
@@ -167,6 +151,16 @@ angular.module('picker', [])
   };
 })
 
+/**
+ * @ngdoc directive
+ * @name colorSpace
+ *
+ * @description
+ * Provides a canvas from which the user can select a hue
+ * in order to generate a colorspace. Is drawn initially
+ * from the link function, then listens for mouse events
+ * in order to move the cursor around the space.
+ */
 .directive('hueSpace', function(Widgets, PickerUtils) {
   return {
     restrict: 'E',
@@ -255,7 +249,16 @@ angular.module('picker', [])
   };
 })
 
-
+/**
+ * @ngdoc directive
+ * @name converters
+ *
+ * @description
+ * Converts a color object into other color
+ * representations (e.g. hex, hsl and rgb).
+ *
+ * TODO Currently only does Hex.
+ */
 .directive('converters', function() {
   return {
     restrict: 'E',
@@ -271,12 +274,28 @@ angular.module('picker', [])
     "<section class='picker-input'> \
       <div class='picker-row'> \
         <span class='picker-prefix'>#</span> \
-        <input type='text' placeholder='FFFFFF' ng-model='color.toUnprefixedHex()'/> \
+        <input type='text' placeholder='FFFFFF' \
+               ng-blur='' \
+               ng-model='color.toUnprefixedHex()'/> \
       </div> \
     </section>"
   };
 })
 
+/**
+ * @ngdoc service
+ * @name Color
+ *
+ * @description
+ * A swiss army knife service for dealing with
+ * colors. Provides an internal Color class
+ * with conversion methods, as well as a factory
+ * method for creating Color instances.
+ *
+ * @example
+ * Color.create(r, g, b)
+ *  .toHex();
+ */
 .service('Color', function(Hex) {
 
   // Color Class
@@ -354,7 +373,19 @@ angular.module('picker', [])
   };
 })
 
-
+/**
+ * @ngdoc service
+ * @name ConvertColor
+ *
+ * @description
+ * A complementary service for converting
+ * other color formats into Color instances
+ * provided by the Color service.
+ *
+ * @example
+ * ConvertColor.fromHSL(h, s, l)
+ *  .toHex();
+ */
 .service('ConvertColor', function(Color, Hex) {
 
   // Create a color from primitive rgb values
@@ -406,7 +437,15 @@ angular.module('picker', [])
   };
 })
 
-
+/**
+ * @ngdoc service
+ * @name Hex
+ *
+ * @description
+ * Utility methods for working
+ * with hexadecimal color strings.
+ *
+ */
 .service('Hex', function() {
   this.validator = new RegExp(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/);
 
@@ -448,7 +487,54 @@ angular.module('picker', [])
   };
 })
 
+/**
+ * @ngdoc service
+ * @name Widgets
+ *
+ * @description
+ * Simple service that builds instances
+ * of widgets that are common across multiple
+ * directives.
+ */
+.service('Widgets', function() {
+
+  this.cursor = function(character) {
+    var cursor = document.createElement('div');
+    cursor.innerHTML = character;
+    cursor.setAttribute('class', 'picker-cursor');
+
+    cursor.style.position = 'absolute';
+    cursor.style.top = 0;
+    cursor.style.left = 0;
+
+    return {
+      element: cursor,
+      x: 0,
+      y: 0
+    };
+  };
+
+  this.canvas = function() {
+    var canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d');
+
+    return {
+      canvas: canvas,
+      context: context
+    };
+  };
+
+})
+
+/**
+ * @ngdoc service
+ * @name PickerUtils
+ *
+ * @description
+ * Common utility methods
+ */
 .service('PickerUtils', function() {
+  // removes 'px' from the end of a string
   this.stripPx = function(str) {
     return str.slice(0, str.length - 2);
   };
