@@ -266,9 +266,6 @@ angular.module('picker', [])
       color: '='
     },
     link: function(scope) {
-      scope.$watch('color', function() {
-        console.log(scope.color.toHex());
-      });
     },
     template:
     "<section class='picker-input'> \
