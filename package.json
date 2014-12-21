@@ -1,0 +1,32 @@
+{
+  "name": "ng-color-pick",
+  "version": "0.0.1",
+  "description": "Simple Angular Color Picker",
+  "main": "picker.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danprince/ng-color-pick.git"
+  },
+  "keywords": [
+    "angular",
+    "color",
+    "picker",
+    "ng-color-pick"
+  ],
+  "author": "Dan Prince",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danprince/ng-color-pick/issues"
+  },
+  "homepage": "https://github.com/danprince/ng-color-pick",
+  "devDependencies": {
+    "karma": "^0.12.28"
+  }
+}

@@ -7,7 +7,7 @@ angular.module('picker', [])
  * @description
  * Need to figure out description a bit first
  */
-.directive('picker', function(Color) {
+.directive('picker', ['Color', function(Color) {
   return {
     restrict: 'EA',
     controller: function($scope) {
@@ -28,7 +28,7 @@ angular.module('picker', [])
       <converters color='color'></converters> \
     </div>"
   };
-})
+}])
 
 /**
  * @ngdoc directive
@@ -40,7 +40,8 @@ angular.module('picker', [])
  * then listens for mouse events in order to move the cursor
  * around the space.
  */
-.directive('colorSpace', function(Widgets, Color, ConvertColor, PickerUtils) {
+.directive('colorSpace', ['Widgets', 'Color', 'ConvertColor', 'PickerUtils',
+  function(Widgets, Color, ConvertColor, PickerUtils) {
   return {
     restrict: 'E',
     replace: true,
@@ -149,7 +150,7 @@ angular.module('picker', [])
       canvas.addEventListener('click',     scope.moveCursor);
     }
   };
-})
+}])
 
 /**
  * @ngdoc directive
@@ -161,7 +162,7 @@ angular.module('picker', [])
  * from the link function, then listens for mouse events
  * in order to move the cursor around the space.
  */
-.directive('hueSpace', function(Widgets, PickerUtils) {
+.directive('hueSpace', ['Widgets', 'PickerUtils', function(Widgets, PickerUtils) {
   return {
     restrict: 'E',
     replace: true,
@@ -247,7 +248,7 @@ angular.module('picker', [])
       canvas.addEventListener('click',     scope.moveCursor);
     }
   };
-})
+}])
 
 /**
  * @ngdoc directive
@@ -305,7 +306,7 @@ angular.module('picker', [])
  * Color.create(r, g, b)
  *  .toHex();
  */
-.service('Color', function(Hex) {
+.service('Color', ['Hex', function(Hex) {
 
   // Color Class
   function Color(r, g, b) {
@@ -380,7 +381,7 @@ angular.module('picker', [])
   this.create = function(r, g, b) {
     return new Color(r, g, b);
   };
-})
+}])
 
 /**
  * @ngdoc service
@@ -395,7 +396,7 @@ angular.module('picker', [])
  * ConvertColor.fromHSL(h, s, l)
  *  .toHex();
  */
-.service('ConvertColor', function(Color, Hex) {
+.service('ConvertColor', ['Color', 'Hex', function(Color, Hex) {
 
   // Create a color from primitive rgb values
   // expected within the range [0, 255]
@@ -444,7 +445,7 @@ angular.module('picker', [])
       return part + m;
     }));
   };
-})
+}])
 
 /**
  * @ngdoc service
