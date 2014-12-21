@@ -67,6 +67,11 @@
     position:relative;
     /* Make space for right hand side element */
     padding-right:2em;
+    /* Don't allow to be selected */
+    user-select:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
   }
 
   /* #5.2 - Simple Row Class
@@ -172,6 +177,10 @@
 /* #8.3  Position suffix */
 .picker-suffix {
   right:0.25em;
+}
+
+.picker-input {
+  margin-top:0.3em;
 }
 
 /* Ensure that inputs within columns

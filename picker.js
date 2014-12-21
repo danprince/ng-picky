@@ -10,20 +10,28 @@ angular.module('picker', [])
 .directive('picker', ['Color', function(Color) {
   return {
     restrict: 'EA',
+    scope: {
+
+    },
     controller: function($scope) {
       $scope.hue = 0;
       $scope.color = Color.create(255, 255, 255);
 
-      $scope.pick = function(color) {
+      $scope.selectColor = function(color) {
+        console.log('pick color', color);
         $scope.color = color;
-        $scope.$apply();
+      };
+
+      $scope.selectHue = function(hue) {
+        $scope.hue = hue;
+        $scope.$digest();
       };
     },
     template:
     "<div class='picker'> \
       <div class='picker-wrapper'> \
-        <color-space hue='hue' select='pick($color)'></color-space> \
-        <hue-space hue='hue'></hue-space> \
+        <color-space hue='hue' pick='selectColor($color)'></color-space> \
+        <hue-space pick='selectHue($hue)'></hue-space> \
       </div> \
       <converters color='color'></converters> \
     </div>"
@@ -47,14 +55,9 @@ angular.module('picker', [])
     replace: true,
     scope: {
       hue: '=',
-      select: '&'
+      pick: '&'
     },
     template: "<section class='picker-colorspace'></section>",
-    controller: function($scope) {
-      $scope.$watch('hue', function() {
-        $scope.draw();
-      });
-    },
     link: function(scope, element) {
       var space = Widgets.canvas(),
           canvas = space.canvas,
@@ -68,7 +71,7 @@ angular.module('picker', [])
       // Pick the color at the cursor
       // (relies on cursor state
       // rather than arguments)
-      scope.pick = function() {
+      scope.select = function() {
         var x, y, data, rgb, hex;
 
         // get cursor's position
@@ -77,7 +80,7 @@ angular.module('picker', [])
         data = context.getImageData(x, y, 1, 1).data;
 
         // expose $color for select expression
-        scope.select({
+        scope.pick({
           $color: Color.create(data[0], data[1], data[2])
         });
       };
@@ -95,7 +98,7 @@ angular.module('picker', [])
         cursor.element.style.top  = y + 'px';
 
         // pick the color at this position
-        scope.pick();
+        scope.select();
       };
 
       // if mousedown move cursor
@@ -167,7 +170,8 @@ angular.module('picker', [])
     restrict: 'E',
     replace: true,
     scope: {
-      hue: '='
+      hue: '=',
+      pick: '&'
     },
     template: "<aside class='picker-huespace'></aside>",
     controller: function($scope) {
@@ -184,10 +188,16 @@ angular.module('picker', [])
       // Pick the color at the cursor
       // (relies on cursor staae
       // rather than arguments)
-      scope.pick = function() {
+      scope.select = function() {
         // get cursor's position
         var y = PickerUtils.stripPx(cursor.element.style.top);
-        scope.hue = Math.round((y / canvas.height) * 360);
+
+        // pick the color at this position
+        scope.pick({
+          $hue: Math.round((y / canvas.height) * 360)
+        });
+
+        //scope.$apply();
       };
 
       // move a cursor based on a mouse event
@@ -199,10 +209,7 @@ angular.module('picker', [])
 
         // update cursor's position
         cursor.element.style.top = y + 'px';
-
-        // pick the color at this position
-        scope.pick();
-        scope.$apply();
+        scope.select();
       };
 
       // if mousedown move cursor
