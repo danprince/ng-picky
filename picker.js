@@ -1,12 +1,18 @@
 angular.module('picker', [])
 
+// Color Picker Directive
 .directive('picker', function() {
+
 })
 
+
+// Picker for selecting a hue
 .directive('hueSpace', function() {
 
 })
 
+
+// Service for Creating Reusable Widgets
 .service('Widgets', function() {
 
   this.cursor = function() {
@@ -23,7 +29,18 @@ angular.module('picker', [])
     };
   };
 
+  this.canvas = function() {
+    var canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d');
+
+    return {
+      canvas: canvas,
+      context: context
+    };
+  };
+
 })
+
 
 .directive('colorSpace', function(Widgets, ConvertColor) {
   return {
@@ -38,8 +55,9 @@ angular.module('picker', [])
       });
     },
     link: function(scope, element) {
-      var canvas = document.createElement('canvas'),
-          context = canvas.getContext('2d'),
+      var space = Widgets.canvas(),
+          canvas = space.canvas,
+          context = space.context,
           cursor = Widgets.cursor();
 
       // Pick the color at the cursor
@@ -134,6 +152,7 @@ angular.module('picker', [])
   };
 })
 
+
 .service('Color', function(Hex) {
 
   // Color Class
@@ -206,6 +225,7 @@ angular.module('picker', [])
   };
 })
 
+
 .factory('ConvertColor', function(Color, Hex) {
 
   // Create a color from primitive rgb values
@@ -257,6 +277,7 @@ angular.module('picker', [])
   };
 })
 
+
 .service('Hex', function() {
   this.validator = new RegExp(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/);
 
@@ -272,7 +293,7 @@ angular.module('picker', [])
 
   this.pad = function(hex) {
     return ('00' + hex).slice(-2);
-  }
+  };
 
   this.normalize = function(dirty) {
     var hex = this.validate(dirty);

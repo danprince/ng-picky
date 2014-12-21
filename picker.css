@@ -1,0 +1,141 @@
+.picker {
+  font-size:1.5em;
+  padding:0.5em;
+  width:10em;
+  background:#333;
+  box-shadow:0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.picker canvas {
+  cursor:crosshair;
+  width:100%;
+  height:100%;
+}
+
+.picker-wrapper {
+  position:relative;
+  padding-right:2em;
+}
+
+.picker-rgbspace {
+  position:absolute;
+  right:0;
+  top:0;
+  width:0.7em;
+  height:100%;
+}
+
+.picker-rgbspace canvas {
+  cursor:crosshair;
+  background:blue;
+}
+
+.picker-rgbspace .picker-cursor {
+  position:absolute;
+  top:0;
+  left:0;
+  font-size:0.8em;
+  color:#5b5b5b;
+
+  /* tweak cursor into place */
+  margin-left:-0.8em;
+  margin-top:-0.65em;
+}
+
+.picker-colorspace {
+  width:8.5em;
+  height:8.5em;
+}
+
+.picker-cursor {
+  font-style:normal;
+  text-rendering:auto;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  pointer-events:none;
+}
+
+.picker-colorspace .picker-cursor {
+  position:absolute;
+  top:0;
+  left:0;
+  color:#f3f3f3;
+  font-size:2em;
+
+  /* tweak cursor into place */
+  line-height:0;
+  margin-left:-0.3em;
+  margin-top:-0.05em;
+}
+
+.picker-colorspace canvas {
+  background:red;
+}
+
+.picker-input {
+  margin-top:0.5em;
+}
+
+.picker-row {
+  position:relative;
+  overflow:hidden;
+}
+
+.picker-three {
+  position:relative;
+  float:left;
+  width:33.33% !important;
+  padding-right:0.25em;
+  box-sizing:border-box;
+}
+
+.picker-prefix, .picker-suffix {
+  position:absolute;
+  top:0;
+  color:#444;
+  line-height:1.25em;
+}
+
+.picker-prefix + input[type=text] {
+  padding-left:1.5em !important;
+}
+.picker-suffix + input[type=text] {
+  padding-right:1.5em !important;
+}
+
+.picker-prefix {
+  left:0.25em;
+}
+.picker-suffix {
+  right:0.25em;
+}
+
+.picker-three input[type=text] {
+  width:auto;
+}
+
+/* Placeholder styles for all browsers */
+.picker-input input[type=text]::-webkit-input-placeholder {
+  color:#555;
+}
+.picker-input input[type=text]::-moz-placeholder {
+  color:#555;
+}
+.picker-input input[type=text]:-moz-placeholder {
+  color:#555;
+}
+.picker-input input[type=text]::-ms-input-placeholder {
+  color:#555;
+}
+
+/* Input Styles */
+.picker input[type=text] {
+  background:#222;
+  color:#aaa;
+  border:none;
+  width:100%;
+  padding:0.5em;
+  box-sizing:border-box;
+  border-radius:0.2em;
+  margin-bottom:0.3em;
+}
