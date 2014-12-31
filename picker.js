@@ -11,21 +11,27 @@ angular.module('picker', [])
   return {
     restrict: 'EA',
     scope: {
-
+      color: '=',
+      pick: '&'
     },
     controller: function($scope) {
+      // defaults
       $scope.hue = 0;
       $scope.color = Color.create(255, 255, 255);
 
       $scope.selectColor = function(color) {
-        console.log('pick color', color);
         $scope.color = color;
+
+        $scope.pick({
+          $color: color
+        });
       };
 
       $scope.selectHue = function(hue) {
         $scope.hue = hue;
         $scope.$digest();
       };
+
     },
     template:
     "<div class='picker'> \
@@ -66,6 +72,7 @@ angular.module('picker', [])
 
       scope.$watch('hue', function() {
         scope.draw();
+        scope.select();
       });
 
       // Pick the color at the cursor
@@ -155,6 +162,7 @@ angular.module('picker', [])
   };
 }])
 
+
 /**
  * @ngdoc directive
  * @name colorSpace
@@ -197,7 +205,7 @@ angular.module('picker', [])
           $hue: Math.round((y / canvas.height) * 360)
         });
 
-        //scope.$apply();
+        scope.$apply();
       };
 
       // move a cursor based on a mouse event
@@ -275,6 +283,9 @@ angular.module('picker', [])
     },
     link: function(scope) {
       console.log('color', scope.color);
+      scope.$watch('color', function() {
+        console.log('hello');
+      });
     },
     template:
     "<section class='picker-input'> \
@@ -296,6 +307,22 @@ angular.module('picker', [])
 .filter('toUnprefixedHex', function() {
   return function(color) {
     return color.toUnprefixedHex();
+  };
+})
+
+.filter('toRGB', function() {
+  return function(color) {
+    return ['rgb(',
+      color.toRGB().join(','),
+    ')'].join('');
+  };
+})
+
+.filter('toHSL', function() {
+  return function(color) {
+    return ['hsl(',
+      color.toHSL().join(','),
+    ')'].join('');
   };
 })
 
