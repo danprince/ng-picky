@@ -1,5 +1,5 @@
 {
-  "name": "ng-color-pick",
+  "name": "ng-picky",
   "version": "0.0.1",
   "description": "Simple Angular Color Picker",
   "main": "picker.js",
@@ -18,7 +18,7 @@
     "angular",
     "color",
     "picker",
-    "ng-color-pick"
+    "ng-picky"
   ],
   "author": "Dan Prince",
   "license": "MIT",
@@ -27,6 +27,11 @@
   },
   "homepage": "https://github.com/danprince/ng-color-pick",
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-banner": "^0.2.3",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-cssmin": "^0.11.0",
+    "grunt-contrib-uglify": "^0.7.0",
     "karma": "^0.12.28"
   }
 }
