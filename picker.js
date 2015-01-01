@@ -296,9 +296,6 @@ angular.module('picker', [])
       color: '='
     },
     link: function(scope) {
-      scope.$watch('color', function() {
-        console.log('change converter value');
-      });
     },
     template:
     "<section class='picker-input'> \
