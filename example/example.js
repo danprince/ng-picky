@@ -1,3 +1,3 @@
-angular.module('example', ['picker'])
+angular.module('example', ['ngColorPick'])
 
 .controller('ExampleController', function($scope) {});

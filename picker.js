@@ -1,4 +1,4 @@
-angular.module('picker', [])
+angular.module('ngColorPick', [])
 
 /**
  * @ngdoc directive
