@@ -29,7 +29,6 @@ angular.module('picker', [])
 
       $scope.selectHue = function(hue) {
         $scope.hue = hue;
-        $scope.$digest();
       };
 
     },
@@ -37,7 +36,7 @@ angular.module('picker', [])
     "<div class='picker'> \
       <div class='picker-wrapper'> \
         <color-space hue='hue' pick='selectColor($color)'></color-space> \
-        <hue-space pick='selectHue($hue)'></hue-space> \
+        <hue-space hue='hue'></hue-space> \
       </div> \
       <converters color='color'></converters> \
     </div>"
@@ -73,6 +72,7 @@ angular.module('picker', [])
       scope.$watch('hue', function() {
         scope.draw();
         scope.select();
+        console.log('change hue');
       });
 
       // Pick the color at the cursor
@@ -106,6 +106,9 @@ angular.module('picker', [])
 
         // pick the color at this position
         scope.select();
+
+        // click needs to trigger scope digest
+        scope.$apply();
       };
 
       // if mousedown move cursor
@@ -194,17 +197,16 @@ angular.module('picker', [])
           cursor = Widgets.cursor('&#9654;');
 
       // Pick the color at the cursor
-      // (relies on cursor staae
+      // (relies on cursor state
       // rather than arguments)
       scope.select = function() {
         // get cursor's position
         var y = PickerUtils.stripPx(cursor.element.style.top);
 
         // pick the color at this position
-        scope.pick({
-          $hue: Math.round((y / canvas.height) * 360)
-        });
+        scope.hue = Math.round((y / canvas.height) * 360);
 
+        // click needs to trigger scope digest
         scope.$apply();
       };
 
@@ -218,6 +220,7 @@ angular.module('picker', [])
         // update cursor's position
         cursor.element.style.top = y + 'px';
         scope.select();
+        scope.$apply();
       };
 
       // if mousedown move cursor
@@ -282,9 +285,8 @@ angular.module('picker', [])
       color: '='
     },
     link: function(scope) {
-      console.log('color', scope.color);
       scope.$watch('color', function() {
-        console.log('hello');
+        console.log('change converter value');
       });
     },
     template:
@@ -292,7 +294,7 @@ angular.module('picker', [])
       <div class='picker-row'> \
         <span class='picker-prefix'>#</span> \
         <input type='text' placeholder='FFFFFF' \
-               ng-bind='color | toUnprefixedHex'/> \
+               ng-model='color | toUnprefixedHex'/> \
       </div> \
     </section>"
   };

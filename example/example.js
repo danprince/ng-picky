@@ -4,11 +4,10 @@ angular.module('example', ['picker'])
   $scope.picked = {};
 
   $scope.$watch('picked', function() {
-    console.log('color changed');
+    console.log('Pick', $scope.picked);
   });
 
   $scope.select = function(color) {
-    console.log('select', color);
     $scope.picked = color;
   };
 });
