@@ -49,116 +49,132 @@ angular.module('picker', [])
  * around the space.
  */
 .directive('colorSpace', ['Widgets', 'Color', 'ConvertColor', 'PickerUtils',
-  function(Widgets, Color, ConvertColor, PickerUtils) {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      hue: '=',
-      pick: '&'
-    },
-    template: "<section class='picker-colorspace'></section>",
-    link: function(scope, element) {
-      var space = Widgets.canvas(),
-          canvas = space.canvas,
-          context = space.context,
-          cursor = Widgets.cursor('&#9675;');
+                          'ColorCache',
+  function(Widgets, Color, ConvertColor, PickerUtils, ColorCache) {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        hue: '=',
+        pick: '&'
+      },
+      template: "<section class='picker-colorspace'></section>",
+      link: function(scope, element) {
+        var space = Widgets.canvas(),
+            canvas = space.canvas,
+            context = space.context,
+            cursor = Widgets.cursor('&#9675;');
 
-      scope.$watch('hue', function() {
-        scope.draw();
-        scope.select();
-        console.log('change hue');
-      });
-
-      // Pick the color at the cursor
-      // (relies on cursor state
-      // rather than arguments)
-      scope.select = function() {
-        var x, y, data, rgb, hex;
-
-        // get cursor's position
-        x = PickerUtils.stripPx(cursor.element.style.left);
-        y = PickerUtils.stripPx(cursor.element.style.top);
-        data = context.getImageData(x, y, 1, 1).data;
-
-        // expose $color for select expression
-        scope.pick({
-          $color: Color.create(data[0], data[1], data[2])
+        scope.$watch('hue', function() {
+          scope.repaint();
+          scope.select();
         });
-      };
 
-      // move a cursor based on a mouse event
-      // expects to be called with `this` set
-      // to the parent element.
-      scope.moveCursor = function(event) {
-        var bounds = this.getBoundingClientRect(),
-            x = event.pageX - bounds.left,
-            y = event.pageY - bounds.top;
+        // Pick the color at the cursor
+        // (relies on cursor state
+        // rather than arguments)
+        scope.select = function() {
+          var x, y, data, rgb, hex;
 
-        // update cursor's position
-        cursor.element.style.left = x + 'px';
-        cursor.element.style.top  = y + 'px';
+          // get cursor's position
+          x = PickerUtils.stripPx(cursor.element.style.left);
+          y = PickerUtils.stripPx(cursor.element.style.top);
+          data = context.getImageData(x, y, 1, 1).data;
 
-        // pick the color at this position
-        scope.select();
+          // expose $color for select expression
+          scope.pick({
+            $color: Color.create(data[0], data[1], data[2])
+          });
+        };
 
-        // click needs to trigger scope digest
-        scope.$apply();
-      };
+        // move a cursor based on a mouse event
+        // expects to be called with `this` set
+        // to the parent element.
+        scope.moveCursor = function(event) {
+          var bounds = this.getBoundingClientRect(),
+              x = event.pageX - bounds.left,
+              y = event.pageY - bounds.top;
 
-      // if mousedown move cursor
-      scope.mouseMove = function(event) {
-        if(scope.mousedown) {
-          scope.moveCursor.call(this, event);
-        }
-      };
+          // update cursor's position
+          cursor.element.style.left = x + 'px';
+          cursor.element.style.top  = y + 'px';
 
-      // toggle mouse state
-      scope.mouseToggle = function(mousedown) {
-        scope.mousedown = mousedown;
-      };
+          // pick the color at this position
+          scope.select();
 
-      // resize canavas
-      scope.resize = function() {
-        canvas.width = element.prop('offsetWidth');
-        canvas.height = element.prop('offsetHeight');
-      };
+          // click needs to trigger scope digest
+          scope.$apply();
+        };
 
-      // redraw space
-      scope.draw = function() {
-        var h, s, l, x, y, gradient;
+        // if mousedown move cursor
+        scope.mouseMove = function(event) {
+          if(scope.mousedown) {
+            scope.moveCursor.call(this, event);
+          }
+        };
 
-        h = scope.hue;
-        s = 0;
-        l = 0;
+        // toggle mouse state
+        scope.mouseToggle = function(mousedown) {
+          scope.mousedown = mousedown;
+        };
 
-        for(y = 0; y < canvas.height; y++) {
-          l = 100 - ((y / canvas.height) * 100);
+        // resize canavas
+        scope.resize = function() {
+          canvas.width = element.prop('offsetWidth');
+          canvas.height = element.prop('offsetHeight');
+        };
 
-          gradient = context.createLinearGradient(0, 0, canvas.width, 0);
-          gradient.addColorStop(0, 'hsl(' + h + ', 0%, ' + l + '%)');
-          gradient.addColorStop(1, 'hsl(' + h + ', 100%, ' + l + '%)');
+        // redraw and check from cache
+        scope.repaint = function() {
+          var imageData = ColorCache.get(scope.hue);
 
-          context.fillStyle = gradient;
-          context.fillRect(0, y, canvas.width, 1);
-        }
+          // attempt to use cache
+          if(imageData) {
+            context.putImageData(imageData, 0, 0);
+          // otherwise draw from scratch
+          } else {
+            scope.paint();
+            imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            ColorCache.set(scope.hue, imageData);
+          }
+        };
 
-      };
+        // redraw space
+        scope.paint = function() {
+          var h, s, l, x, y, gradient, cache;
 
-      scope.resize();
-      scope.mousedown = false;
-      scope.draw();
+          h = scope.hue;
+          s = 0;
+          l = 0;
 
-      element.append(canvas);
-      element.append(cursor.element);
+          for(y = 0; y < canvas.height; y++) {
+            l = 100 - ((y / canvas.height) * 100);
 
-      canvas.addEventListener('mouseup',   scope.mouseToggle.bind(null, false));
-      canvas.addEventListener('mousedown', scope.mouseToggle.bind(null, true));
-      canvas.addEventListener('mousemove', scope.mouseMove);
-      canvas.addEventListener('click',     scope.moveCursor);
-    }
-  };
-}])
+            gradient = context.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, 'hsl(' + h + ', 0%, ' + l + '%)');
+            gradient.addColorStop(1, 'hsl(' + h + ', 100%, ' + l + '%)');
+
+            context.fillStyle = gradient;
+            context.fillRect(0, y, canvas.width, 1);
+          }
+
+        };
+
+        scope.resize();
+        scope.mousedown = false;
+        scope.paint();
+
+        element.append(canvas);
+        element.append(cursor.element);
+
+        canvas.addEventListener('mouseup',   scope.mouseToggle.bind(null, false));
+        canvas.addEventListener('mousedown', scope.mouseToggle.bind(null, true));
+        canvas.addEventListener('mousemove', scope.mouseMove);
+        canvas.addEventListener('click',     scope.moveCursor);
+      }
+    };
+  }
+])
 
 
 /**
@@ -237,7 +253,7 @@ angular.module('picker', [])
       };
 
       // redraw space
-      scope.draw = function() {
+      scope.paint = function() {
         var h = 0;
 
         for(y = 0; y < canvas.height; y++) {
@@ -250,7 +266,7 @@ angular.module('picker', [])
 
       scope.resize();
       scope.mousedown = false;
-      scope.draw();
+      scope.paint();
 
       element.append(canvas);
       element.append(cursor.element);
@@ -572,6 +588,29 @@ angular.module('picker', [])
     };
   };
 
+})
+
+/**
+ * @ngdoc service
+ * @name ColorCache
+ *
+ * @description
+ * Keep cached versions of the imgData for
+ * any given hue. This can be looked up in
+ * future, rather than redrawing on the canvas.
+ */
+.service('ColorCache', function() {
+  var cache = {};
+
+  this.get = function(hue) {
+    return cache[hue];
+  };
+
+  this.set = function(hue, imgData) {
+    if(!cache[hue]) {
+      cache[hue] = imgData;
+    }
+  };
 })
 
 /**
