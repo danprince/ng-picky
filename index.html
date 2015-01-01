@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang='en' ng-app='example'>
+<head>
+  <meta charset='UTF-8' />
+  <title>ngColorPick</title>
+  <link rel='stylesheet' href='bower_components/ng-picky/ng-picky.css' />
+  <script src='bower_components/angular/angular.js'></script>
+  <script src='bower_components/ng-picky/ng-picky.js'></script>
+  <script src='example.js'></script>
+</head>
+<body ng-controller='ExampleController' style='background:{{ color | toHex }};'>
+  <picker color='color'></picker>
+</body>
+</html>
