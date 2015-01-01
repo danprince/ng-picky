@@ -6,6 +6,18 @@ module.exports = function(grunt) {
     // make available for templating
     project: project,
 
+    // run jshint over files
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      production: {
+        files: {
+          src: 'src/*.js'
+        }
+      }
+    },
+
     // add banners to all release files
     usebanner: {
       production: {
@@ -52,6 +64,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-banner');
 
   grunt.registerTask('build', ['uglify', 'cssmin', 'copy', 'usebanner']);
