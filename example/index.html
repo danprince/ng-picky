@@ -3,10 +3,19 @@
 <head>
   <meta charset='UTF-8' />
   <title>ngColorPick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/5.5.0/css/foundation.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation-essential/5.5.0/css/normalize.css">
+
   <link rel='stylesheet' href='../ng-picky.css' />
   <script src='angular.js'></script>
   <script src='../ng-picky.js'></script>
   <script src='example.js'></script>
+
+  <style>
+    body {
+      padding:1em;
+    }
+  </style>
 </head>
 <body ng-controller='ExampleController' style='background:{{ color | toHex }};'>
   <picker color='color'></picker>

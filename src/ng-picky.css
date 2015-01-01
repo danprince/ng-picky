@@ -10,12 +10,13 @@
  * #6 - Hue Space Components
  * #7 - Main Square Canvas
  * #8 - Misc Components
+ * #9 - BugFixes
  */
 
 /* #1 - Main Element Styles */
 /* ------------------------ */
 .picker {
-  font-size:1.5em;
+  font-size:1.5rem; /* 1.5rem */
   padding:0.5em;
   width:10em;
   background:#333;
@@ -26,6 +27,7 @@
   -moz-user-select:none;
   -ms-user-select:none;
 }
+
 
 /* #2 - Generic Canvas Styles */
 /* -------------------------- */
@@ -44,6 +46,7 @@
   width:100%;
   padding:0.5em;
   text-transform:uppercase;
+  font-size:16px; /* 1rem */
 
   user-select:text;
   -webkit-user-select:text;
@@ -177,7 +180,7 @@
   position:absolute;
   top:0;
   color:#444;
-  line-height:1.25em;
+  line-height:1.75em;
 }
 
 /* #8.2 Position prefix */
@@ -223,3 +226,14 @@
 .picker-input input[type=text]::-ms-input-placeholder {
   color:#555;
 }
+
+
+/* #9 - Bug Fixes */
+/* -------------- */
+
+  /* #5.1 - Foundation uses border-box */
+  .picker, .picker *:after, .picker *:before {
+    box-sizing:content-box !important;
+    -webkit-box-sizing:content-box !important;
+    -moz-box-sizing:content-box !important;
+  }
