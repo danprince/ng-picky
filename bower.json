@@ -1,0 +1,25 @@
+{
+  "name": "ng-picky",
+  "version": "0.0.1",
+  "homepage": "https://github.com/danprince/ng-picky",
+  "authors": [
+    "danprince <danielprince@hotmail.co.uk>"
+  ],
+  "description": "Pure Angular color picker",
+  "main": "ng-picky.js",
+  "keywords": [
+    "ng-picky",
+    "picky",
+    "angular",
+    "color",
+    "picker"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
