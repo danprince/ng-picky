@@ -294,7 +294,7 @@ angular.module('picker', [])
       <div class='picker-row'> \
         <span class='picker-prefix'>#</span> \
         <input type='text' placeholder='FFFFFF' \
-               ng-model='color | toUnprefixedHex'/> \
+               ng-value='color | toUnprefixedHex'/> \
       </div> \
     </section>"
   };
