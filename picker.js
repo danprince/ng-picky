@@ -26,11 +26,6 @@ angular.module('picker', [])
           $color: color
         });
       };
-
-      $scope.selectHue = function(hue) {
-        $scope.hue = hue;
-      };
-
     },
     template:
     "<div class='picker'> \
@@ -300,8 +295,11 @@ angular.module('picker', [])
   };
 })
 
-.filter('toHex', function() {
+.filter('toHex', function(Color) {
   return function(color) {
+    if(!color) {
+      color = Color.default();
+    }
     return color.toHex();
   };
 })
@@ -416,6 +414,10 @@ angular.module('picker', [])
   // Factory wrapper for creating instances
   this.create = function(r, g, b) {
     return new Color(r, g, b);
+  };
+
+  this.default = function() {
+    return new Color(255, 255, 255);
   };
 }])
 
