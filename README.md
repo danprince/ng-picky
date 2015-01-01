@@ -8,15 +8,15 @@ A straight up Angular color picker. No jQuery/Bootstrap dependencies.
 # Example
 
 ```html
-  <script src='./ngColorPick.js'></script>
-  <script src='./ngColorPick.css'></script>
+  <script src='./ng-picky.js'></script>
+  <script src='./ng-picky.css'></script>
   ...
   <div class='preview' style='background:{{color | toHex}};'></div>
   <picker color='color'></picker>
 ```
 
 ```js
-  angular.module('myApp', ['ngColorPick']
+  angular.module('myApp', ['ngPicky]
 ```
 
 # Installation
@@ -24,13 +24,13 @@ A straight up Angular color picker. No jQuery/Bootstrap dependencies.
 ### Bower
 
 ```
-bower install ng-color-pick
+bower install ng-picky
 ```
 
 ### NPM
 
 ```
-npm install ng-color-pick
+npm install ng-picky
 ```
 
 # Usage

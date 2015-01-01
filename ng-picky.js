@@ -1,5 +1,5 @@
 /* ng-picky v0.0.1 | (c) 2015 Dan Prince | MIT */
-angular.module('ngColorPick', [])
+angular.module('ngPicky', [])
 
 /**
  * @ngdoc directive
@@ -15,7 +15,7 @@ angular.module('ngColorPick', [])
       color: '=',
       pick: '&'
     },
-    controller: function($scope) {
+    controller: ['$scope', function($scope) {
       // defaults
       $scope.hue = 0;
       $scope.color = Color.create(255, 255, 255);
@@ -27,7 +27,7 @@ angular.module('ngColorPick', [])
           $color: color
         });
       };
-    },
+    }],
     template:
     "<div class='picker'> \
       <div class='picker-wrapper'> \
@@ -197,11 +197,6 @@ angular.module('ngColorPick', [])
       pick: '&'
     },
     template: "<aside class='picker-huespace'></aside>",
-    controller: function($scope) {
-      $scope.$watch('hue', function() {
-        // redraw colour space
-      });
-    },
     link: function(scope, element) {
       var space = Widgets.canvas(),
           canvas = space.canvas,
@@ -296,8 +291,6 @@ angular.module('ngColorPick', [])
     scope: {
       color: '='
     },
-    link: function(scope) {
-    },
     template:
     "<section class='picker-input'> \
       <div class='picker-row'> \
@@ -309,14 +302,14 @@ angular.module('ngColorPick', [])
   };
 })
 
-.filter('toHex', function(Color) {
+.filter('toHex', ['Color', function(Color) {
   return function(color) {
     if(!color) {
       color = Color.default();
     }
     return color.toHex();
   };
-})
+}])
 
 .filter('toUnprefixedHex', function() {
   return function(color) {
