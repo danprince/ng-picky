@@ -19,7 +19,12 @@
   padding:0.5em;
   width:10em;
   background:#333;
-  box-shadow:0 3px 5px huea(0, 0, 0, 0.1);
+  box-shadow:0 3px 5px rgba(0, 0, 0, 0.1);
+
+  user-select:none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
 }
 
 /* #2 - Generic Canvas Styles */
@@ -39,6 +44,11 @@
   width:100%;
   padding:0.5em;
   text-transform:uppercase;
+
+  user-select:text;
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  -ms-user-select:text;
 
   border-radius:0.2em;
   -webkit-border-radius:0.2em;
