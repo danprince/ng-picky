@@ -8,8 +8,7 @@
   <script src='../picker.js'></script>
   <script src='example.js'></script>
 </head>
-<body ng-controller='ExampleController'>
+<body ng-controller='ExampleController' style='background:{{ picked | toHex }};'>
   <picker color='picked'></picker>
-  <textarea style='background:{{ picked | toHex }};'></textarea>
 </body>
 </html>
