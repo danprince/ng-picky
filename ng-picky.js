@@ -1,4 +1,4 @@
-/* ng-picky v0.0.1 | (c) 2015 Dan Prince | MIT */
+/* ng-picky v0.1.2 | (c) 2015 Dan Prince | MIT */
 angular.module('ngPicky', [])
 
 /**
