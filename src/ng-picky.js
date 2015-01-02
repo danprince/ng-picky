@@ -244,7 +244,6 @@ angular.module('ngPicky', [])
       scope.resize = function() {
         canvas.width = element.prop('offsetWidth');
         canvas.height = element.prop('offsetHeight');
-        console.log(canvas.width, canvas.height);
       };
 
       // redraw space
