@@ -18,9 +18,11 @@
 .picker {
   font-size:1.5rem; /* 1.5rem */
   padding:0.5em;
-  width:10em;
   background:#333;
   box-shadow:0 3px 5px rgba(0, 0, 0, 0.1);
+
+  /* let user style width */
+  width:300px;
 
   user-select:none;
   -webkit-user-select:none;
@@ -35,18 +37,19 @@
   cursor:crosshair;
   width:100%;
   height:100%;
+  display:block;
 }
 
 /* #3 - Generic Input Styles */
 /* ------------------------- */
 .picker input[type=text] {
+  font-size:16px; /* 1rem */
   background:#222;
   color:#aaa;
   border:none;
   width:100%;
   padding:0.5em;
   text-transform:uppercase;
-  font-size:16px; /* 1rem */
 
   user-select:text;
   -webkit-user-select:text;
@@ -79,7 +82,7 @@
   .picker-wrapper {
     position:relative;
     /* Make space for right hand side element */
-    padding-right:2em;
+    padding-right:1.8em;
     /* Don't allow to be selected */
     user-select:none;
     -webkit-user-select:none;
@@ -150,7 +153,9 @@
 /* #7.1 Square container */
 .picker-colorspace {
   width:8.5em;
+  width:auto;
   height:8.5em;
+  height:auto;
 }
 
 /* #7.2 Cursor above main square */

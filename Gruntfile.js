@@ -58,6 +58,14 @@ module.exports = function(grunt) {
         src: '*',
         dest: './'
       }
+    },
+
+    // watch for changes
+    watch: {
+      production: {
+        files: ['src/*'],
+        tasks: ['build']
+      }
     }
   });
 
@@ -65,6 +73,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-banner');
 
   grunt.registerTask('build', ['uglify', 'cssmin', 'copy', 'usebanner']);
