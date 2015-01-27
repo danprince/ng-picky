@@ -153,9 +153,7 @@
 
 /* #7.1 Square container */
 .picker-colorspace {
-  width:8.5em;
   width:auto;
-  height:8.5em;
   height:auto;
 }
 
@@ -229,7 +227,7 @@
 .picker-input input[type=text]:-moz-placeholder {
   color:#555;
 }
-.picker-input input[type=text]::-ms-input-placeholder {
+.picker-input input[type=text]:-ms-input-placeholder {
   color:#555;
 }
 

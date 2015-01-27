@@ -118,11 +118,6 @@ angular.module('ngPicky', [])
           scope.mousedown = mousedown;
         };
 
-        // resize canavas
-        scope.resize = function() {
-          canvas.width = canvas.height = element.prop('offsetWidth');
-        };
-
         // redraw and check from cache
         scope.repaint = function() {
           var imageData = ColorCache.get(scope.hue);
@@ -159,7 +154,6 @@ angular.module('ngPicky', [])
 
         };
 
-        scope.resize();
         scope.mousedown = false;
         scope.paint();
 
@@ -240,13 +234,6 @@ angular.module('ngPicky', [])
         scope.mousedown = mousedown;
       };
 
-      // resize canavas
-      scope.resize = function() {
-        canvas.width = element.prop('offsetWidth');
-        canvas.height = element.prop('offsetHeight');
-        console.log(canvas.width, canvas.height);
-      };
-
       // redraw space
       scope.paint = function() {
         var h = 0;
@@ -259,7 +246,6 @@ angular.module('ngPicky', [])
         }
       };
 
-      scope.resize();
       scope.mousedown = false;
       scope.paint();
 
