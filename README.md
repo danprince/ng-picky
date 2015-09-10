@@ -16,7 +16,7 @@ A straight up Angular color picker. No jQuery/Bootstrap dependencies.
 ```
 
 ```js
-  angular.module('myApp', ['ngPicky]
+  angular.module('myApp', ['ngPicky'])
 ```
 
 # Installation
