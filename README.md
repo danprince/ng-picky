@@ -11,8 +11,9 @@ A straight up Angular color picker. No jQuery/Bootstrap dependencies.
   <script src='./ng-picky.js'></script>
   <script src='./ng-picky.css'></script>
   ...
-  <div class='preview' style='background:{{color | toHex}};'></div>
-  <picker color='color'></picker>
+  <div ng-app="myApp" ng-controller="ngPicky">
+  <div class='what_you_want_to_change' style='background:{{color | toHex}};'></div>
+  <picker color="color"></picker>
 ```
 
 ```js
