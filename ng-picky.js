@@ -92,9 +92,8 @@ angular.module('ngPicky', [])
         // expects to be called with `this` set
         // to the parent element.
         scope.moveCursor = function(event) {
-          var bounds = this.getBoundingClientRect(),
-              x = event.pageX - bounds.left,
-              y = event.pageY - bounds.top;
+          var x = event.layerX,
+              y = event.layerY;
 
           // update cursor's position
           cursor.element.style.left = x + 'px';
